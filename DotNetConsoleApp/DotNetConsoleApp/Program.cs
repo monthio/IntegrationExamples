@@ -67,7 +67,7 @@ namespace DotNetConsoleApp
                 JsonConvert.DeserializeObject<SmartCheckSessionResponseDto>(await createSessionSmartCheckResponse
                     .Content.ReadAsStringAsync());
 
-            return "https://prod-monthio.northeurope.cloudapp.azure.com/budget-consumer-client-app/?sessionId=" + createdSmartCheckSession;
+            return "https://test-monthio.northeurope.cloudapp.azure.com/budget-consumer-client-app/?sessionId=" + createdSmartCheckSession;
         }
     }
 
@@ -87,7 +87,7 @@ namespace DotNetConsoleApp
         public long SmartCheckConfigurationId { get; set; }
         public DateTime CreatedOn { get; set; }
         public DateTime UpdatedOn { get; set; }
-        public DateTime FinishedOn { get; set; }
+        public DateTime? FinishedOn { get; set; }
         public List<ParringApplicant> ParringApplicants { get; set; }
         public string Self { get; set; }
     }
