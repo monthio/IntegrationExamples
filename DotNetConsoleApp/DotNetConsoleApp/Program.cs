@@ -13,20 +13,23 @@ namespace DotNetConsoleApp
     {
         static async Task Main(string[] args)
         {
-            var client = await SetupMonthioIntegrationClient();
+            var url= await GetSmartCheckSessionUrl();
+            Console.WriteLine(url);
         }
 
-        private static async Task<HttpClient> SetupMonthioIntegrationClient()
+        private static string identityServerUrl = "https://test-identity.monthio.com";
+        private static string budgetServerUrl = "https://test-budgets.monthio.com";
+
+        private static async Task<string> GetSmartCheckSessionUrl()
         {
             var client = new HttpClient();
-            var identityServerUrl = "https://test-identity.monthio.com/";
-            var discoveryDocument = await client.GetDiscoveryDocumentAsync(identityServerUrl);
+            var discoveryDocument = await client.GetDiscoveryDocumentAsync($"{identityServerUrl}/");
 
             var tokenResponse = await client.RequestRefreshTokenAsync(
                 new RefreshTokenRequest
                 {
                     Address = discoveryDocument.TokenEndpoint,
-                    RefreshToken = "xuAB0OmNiteR1zfVCy47T0o7Cz7GGMTfszedGwxWFvQ",
+                    RefreshToken = "<YOUR REFRESH TOKEN>",
                     ClientId = "external_client",
                     Scope = "budgetApi"
                 });
@@ -34,14 +37,14 @@ namespace DotNetConsoleApp
             var apiClient = new HttpClient();
             apiClient.SetBearerToken(tokenResponse.AccessToken);
 
-            var budgetDefinitionsResponse = await apiClient.GetAsync("https://test-budgets.monthio.com/api/budget-definitions/available");
+            var budgetDefinitionsResponse = await apiClient.GetAsync($"{budgetServerUrl}/api/budget-definitions/available");
             var budgetDefinitions = JsonConvert.DeserializeObject<List<BudgetDefinition>>(await budgetDefinitionsResponse.Content.ReadAsStringAsync());
 
-            var response = await apiClient.PostAsync("https://test-budgets.monthio.com/api/smart-check-configurations",
-                new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(new SmartCheckConfigurationRequestDto
+            var response = await apiClient.PostAsync($"{budgetServerUrl}/api/smart-check-configurations",
+                new StringContent(JsonConvert.SerializeObject(new SmartCheckConfigurationRequestDto
                 {
-                    Name = "Smartcheck configuration from API",
-                    CallbackUrl = "https://0bfa3777fadcbdd27080aa1cd80b5c0c.m.pipedream.net",
+                    Name = "SmartCheck configuration from API",
+                    CallbackUrl = "<YOUR CALLBACK URL>",
                     Consent = new Consent
                     {
                         Header = "Consent header",
@@ -50,35 +53,21 @@ namespace DotNetConsoleApp
                     BudgetDefinitionId = budgetDefinitions.First().Id
                 }), Encoding.UTF8, "application/json"));
             var createdConfiguration = JsonConvert.DeserializeObject<SmartCheckConfigurationResponseDto>(await response.Content.ReadAsStringAsync());
+;
+            var createSessionSmartCheckResponse = await apiClient.PostAsync($"{budgetServerUrl}/api/smart-check-sessions", 
+                    new StringContent(JsonConvert.SerializeObject(new SmartCheckSessionRequestDto
+                {
+                    ConsumerId = "consumer_id",
+                    ConsumerEmail = "oap@monthio.com",
+                    SmartCheckConfigurationId = createdConfiguration.Id,
 
-
-            var getAllSmartCheckConfigurationResponse =
-                await apiClient.GetAsync("https://test-budgets.monthio.com/api/smart-check-configurations");
-            var allSmartCheckConfiguration = JsonConvert.DeserializeObject<List<SmartCheckConfigurationResponseDto>>(
-                await getAllSmartCheckConfigurationResponse.Content.ReadAsStringAsync());
-
-            var parsedAggregate = Newtonsoft.Json.JsonConvert.SerializeObject(new SmartCheckSessionRequestDto
-            {
-                ConsumerId = "my_persona_consumer_id",
-                ConsumerEmail = "oap@monthio.com",
-                SmartCheckConfigurationId = createdConfiguration.Id,
-
-            });
-            var jsonContent = new StringContent(parsedAggregate, Encoding.UTF8, "application/json");
-            var createSessionSmartCheckResponse =
-                await apiClient.PostAsync("https://test-budgets.monthio.com/api/smart-check-sessions", jsonContent);
+                }), Encoding.UTF8, "application/json"));
+            
             var createdSmartCheckSession =
                 JsonConvert.DeserializeObject<SmartCheckSessionResponseDto>(await createSessionSmartCheckResponse
                     .Content.ReadAsStringAsync());
 
-            //  Get all
-            var getAllSmartCheckSessionRequest =
-                await apiClient.GetAsync("https://test-budgets.monthio.com/api/smart-check-sessions");
-            var allSmartCheckSessions = JsonConvert.DeserializeObject<List<SmartCheckSessionResponseDto>>(
-                await getAllSmartCheckSessionRequest.Content.ReadAsStringAsync());
-
-            Console.WriteLine(await response.Content.ReadAsStringAsync());
-            return apiClient;
+            return "https://prod-monthio.northeurope.cloudapp.azure.com/budget-consumer-client-app/?sessionId=" + createdSmartCheckSession;
         }
     }
 
