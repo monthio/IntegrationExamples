@@ -1,4 +1,4 @@
-﻿using IdentityModel.Client;
+using IdentityModel.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,6 +40,36 @@ namespace DotNetConsoleApp
             var budgetDefinitionsResponse = await apiClient.GetAsync($"{budgetServerUrl}/api/budget-definitions/available");
             var budgetDefinitions = JsonConvert.DeserializeObject<List<BudgetDefinition>>(await budgetDefinitionsResponse.Content.ReadAsStringAsync());
 
+            var configurationResponse = await apiClient.GetAsync($"{budgetServerUrl}/api/smart-check-configurations");
+            var existingConfigurations = JsonConvert.DeserializeObject<CollectionEnvelope<SmartCheckConfigurationResponseDto>>(await configurationResponse.Content.ReadAsStringAsync());
+
+            if (existingConfigurations.Collection.Count == 0)
+            {
+                await CreateConfiguration(apiClient, budgetDefinitions);
+                configurationResponse = await apiClient.GetAsync($"{budgetServerUrl}/api/smart-check-configurations");
+                existingConfigurations = JsonConvert.DeserializeObject<CollectionEnvelope<SmartCheckConfigurationResponseDto>>(await configurationResponse.Content.ReadAsStringAsync());
+            }
+            
+            var configuration = existingConfigurations.Collection.First();
+
+                var createSessionSmartCheckResponse = await apiClient.PostAsync($"{budgetServerUrl}/api/smart-check-sessions", 
+                    new StringContent(JsonConvert.SerializeObject(new SmartCheckSessionRequestDto
+                {
+                    ConsumerId = "consumer_id",
+                    ConsumerEmail = "oap@monthio.com",
+                    SmartCheckConfigurationId = configuration.Id,
+
+                }), Encoding.UTF8, "application/json"));
+            
+            var createdSmartCheckSession =
+                JsonConvert.DeserializeObject<SmartCheckSessionResponseDto>(await createSessionSmartCheckResponse
+                    .Content.ReadAsStringAsync());
+
+            return "https://test-monthio.northeurope.cloudapp.azure.com/budget-consumer-client-app/?sessionId=" + createdSmartCheckSession.Id;
+        }
+
+        private static async Task CreateConfiguration(HttpClient apiClient, List<BudgetDefinition> budgetDefinitions)
+        {
             var response = await apiClient.PostAsync($"{budgetServerUrl}/api/smart-check-configurations",
                 new StringContent(JsonConvert.SerializeObject(new SmartCheckConfigurationRequestDto
                 {
@@ -52,22 +82,6 @@ namespace DotNetConsoleApp
                     },
                     BudgetDefinitionId = budgetDefinitions.First().Id
                 }), Encoding.UTF8, "application/json"));
-            var createdConfiguration = JsonConvert.DeserializeObject<SmartCheckConfigurationResponseDto>(await response.Content.ReadAsStringAsync());
-;
-            var createSessionSmartCheckResponse = await apiClient.PostAsync($"{budgetServerUrl}/api/smart-check-sessions", 
-                    new StringContent(JsonConvert.SerializeObject(new SmartCheckSessionRequestDto
-                {
-                    ConsumerId = "consumer_id",
-                    ConsumerEmail = "oap@monthio.com",
-                    SmartCheckConfigurationId = createdConfiguration.Id,
-
-                }), Encoding.UTF8, "application/json"));
-            
-            var createdSmartCheckSession =
-                JsonConvert.DeserializeObject<SmartCheckSessionResponseDto>(await createSessionSmartCheckResponse
-                    .Content.ReadAsStringAsync());
-
-            return "https://test-monthio.northeurope.cloudapp.azure.com/budget-consumer-client-app/?sessionId=" + createdSmartCheckSession;
         }
     }
 
@@ -126,6 +140,11 @@ namespace DotNetConsoleApp
         public DateTime UpdatedOn { get; set; }
         public DateTime CreatedOn { get; set; }
         public string Self { get; set; }
+    }
+
+    public class CollectionEnvelope<T>
+    {
+       public List<T> Collection { get; set; }
     }
 
     public class Consent
