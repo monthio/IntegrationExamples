@@ -65,7 +65,7 @@ namespace DotNetConsoleApp
                 JsonConvert.DeserializeObject<SmartCheckSessionResponseDto>(await createSessionSmartCheckResponse
                     .Content.ReadAsStringAsync());
 
-            return "https://test-monthio.northeurope.cloudapp.azure.com/budget-consumer-client-app/?sessionId=" + createdSmartCheckSession.Id;
+            return "https://test-flow.monthio.com/?sessionId=" + createdSmartCheckSession.Id;
         }
 
         private static async Task CreateConfiguration(HttpClient apiClient, List<BudgetDefinition> budgetDefinitions)
