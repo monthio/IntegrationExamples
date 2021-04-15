@@ -30,7 +30,6 @@ namespace DotNetConsoleApp
                 {
                     Address = discoveryDocument.TokenEndpoint,
                     RefreshToken = "<YOUR REFRESH TOKEN>",
-                    ClientId = "external_client",
                     ClientId = "external_client", // Do not replace this with your clientId, this should stay external_client
                     Scope = "budgetApi"
                 });
