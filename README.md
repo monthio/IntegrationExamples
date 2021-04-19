@@ -1,7 +1,7 @@
 # IntegrationExamples
 Collection of examples that illustrate how to integrate with Monthio public API
 
-Here is a high overview flow diagram which exmplains how does Monthio system works.
+Here is a high overview flow diagram which explains how does Monthio system works.
 ![FlowExample](./images/Flow.jpeg)
 
 1. Create configuration that defines how most of the settings should work. (Callback url, pdf output, redirect url, which modules are enabled, etc.). This needs to be done only once per different configuration. THey should be reused.
