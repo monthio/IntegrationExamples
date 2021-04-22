@@ -30,7 +30,6 @@ namespace DotNetConsoleApp
                 {
                     Address = discoveryDocument.TokenEndpoint,
                     RefreshToken = "<YOUR REFRESH TOKEN>",
-                    ClientId = "external_client",
                     ClientId = "external_client", // Do not replace this with your clientId, this should stay external_client
                     Scope = "budgetApi"
                 });
@@ -50,7 +49,7 @@ namespace DotNetConsoleApp
                 configurationResponse = await apiClient.GetAsync($"{budgetServerUrl}/api/smart-check-configurations");
                 existingConfigurations = JsonConvert.DeserializeObject<CollectionEnvelope<SmartCheckConfigurationResponseDto>>(await configurationResponse.Content.ReadAsStringAsync());
             }
-            
+
             var configuration = existingConfigurations.Collection.First();
 
                 var createSessionSmartCheckResponse = await apiClient.PostAsync($"{budgetServerUrl}/api/smart-check-sessions", 
@@ -61,7 +60,7 @@ namespace DotNetConsoleApp
                     SmartCheckConfigurationId = configuration.Id,
 
                 }), Encoding.UTF8, "application/json"));
-            
+
             var createdSmartCheckSession =
                 JsonConvert.DeserializeObject<SmartCheckSessionResponseDto>(await createSessionSmartCheckResponse
                     .Content.ReadAsStringAsync());
