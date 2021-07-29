@@ -179,7 +179,8 @@
 					"script": {
 						"exec": [
 							"var jsonData = JSON.parse(responseBody);\r",
-							"pm.collectionVariables.set(\"session_id\", jsonData.id);"
+							"pm.collectionVariables.set(\"session_id\", jsonData.id);\r",
+							"pm.collectionVariables.set(\"consumer_id\", jsonData.consumerId);"
 						],
 						"type": "text/javascript"
 					}
@@ -358,8 +359,8 @@
 				"method": "POST",
 				"header": [],
 				"body": {
-					"mode": "urlencoded",
-					"urlencoded": [],
+					"mode": "raw",
+					"raw": "{\r\n    \"bban\": \"xxxxxxxxxxxxxx\",\r\n    \"names\": [\"FirstName\", \"LastName\"]\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
