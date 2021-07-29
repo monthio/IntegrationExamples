@@ -1,18 +1,19 @@
 {
 	"info": {
-		"_postman_id": "e9ce59af-8a5c-45f0-b593-c10c9cbce8b6",
+		"_postman_id": "f4fe2be1-7e4a-4570-8aa1-0afac5e0fc5a",
 		"name": "Monthio authentication",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
-			"name": "Identity-app OAuth 2.0 Token endpoint",
+			"name": "Connect",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"exec": [
-							""
+							"var jsonData = JSON.parse(responseBody);\r",
+							"pm.collectionVariables.set(\"access_token\", jsonData.access_token);"
 						],
 						"type": "text/javascript"
 					}
@@ -29,7 +30,7 @@
 					"urlencoded": [
 						{
 							"key": "refresh_token",
-							"value": "{{refresh_token}}",
+							"value": "",
 							"type": "text"
 						},
 						{
@@ -67,6 +68,321 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Get configurations",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"postman.setNextRequest(null)"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [],
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{budget_app_url}}/api/smart-check-configurations",
+					"protocol": "https",
+					"host": [
+						"{{budget_app_url}}"
+					],
+					"path": [
+						"api",
+						"smart-check-configurations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create configuration",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);\r",
+							"pm.collectionVariables.set(\"config_id\", jsonData.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"TestConfiguration1\",\r\n  \"redirectUrl\": \"https://www.google.com\",\r\n  \"callbackUrl\": \"https://5e192e274019c31972158fc43ce14781.m.pipedream.net\",\r\n  \"pdfEmailAddress\": \"monthio@monthio.com\",\r\n  \"shouldShowConsumerNote\": true,\r\n  \"budgetDefinitionId\": 1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{budget_app_url}}/api/smart-check-configurations",
+					"protocol": "https",
+					"host": [
+						"{{budget_app_url}}"
+					],
+					"path": [
+						"api",
+						"smart-check-configurations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create session",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);\r",
+							"pm.collectionVariables.set(\"session_id\", jsonData.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"consumerId\": \"Applicant1\",\r\n  \"consumerEmail\": \"applicant@email.com\",\r\n  \"consumerPhone\": \"+4531169167\",\r\n  \"consumerCpr\": \"130789-1345\",\r\n  \"smartCheckConfigurationId\": {{config_id}},\r\n  \"parringApplicants\": []\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{budget_app_url}}/api/smart-check-sessions",
+					"protocol": "https",
+					"host": [
+						"{{budget_app_url}}"
+					],
+					"path": [
+						"api",
+						"smart-check-sessions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get created session",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [],
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{budget_app_url}}/api/smart-check-sessions/{{session_id}}",
+					"protocol": "https",
+					"host": [
+						"{{budget_app_url}}"
+					],
+					"path": [
+						"api",
+						"smart-check-sessions",
+						"{{session_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all sessions",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [],
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{budget_app_url}}/api/smart-check-sessions",
+					"protocol": "https",
+					"host": [
+						"{{budget_app_url}}"
+					],
+					"path": [
+						"api",
+						"smart-check-sessions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Sensitive Check",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [],
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{budget_app_url}}/api/smart-check-sessions/{{session_id}}/consumer/{{consumer_id}}/sensitive-check",
+					"protocol": "https",
+					"host": [
+						"{{budget_app_url}}"
+					],
+					"path": [
+						"api",
+						"smart-check-sessions",
+						"{{session_id}}",
+						"consumer",
+						"{{consumer_id}}",
+						"sensitive-check"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"event": [
@@ -97,6 +413,26 @@
 		{
 			"key": "identity_app_url",
 			"value": "test-identity.monthio.com"
+		},
+		{
+			"key": "budget_app_url",
+			"value": "test-budgets.monthio.com"
+		},
+		{
+			"key": "access_token",
+			"value": ""
+		},
+		{
+			"key": "config_id",
+			"value": ""
+		},
+		{
+			"key": "session_id",
+			"value": ""
+		},
+		{
+			"key": "consumer_id",
+			"value": ""
 		}
 	]
 }
