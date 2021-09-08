@@ -150,7 +150,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"name\": \"TestConfiguration1\",\r\n  \"redirectUrl\": \"https://www.google.com\",\r\n  \"callbackUrl\": \"https://5e192e274019c31972158fc43ce14781.m.pipedream.net\",\r\n  \"pdfEmailAddress\": \"monthio@monthio.com\",\r\n  \"shouldShowConsumerNote\": true,\r\n  \"budgetDefinitionId\": 1\r\n}",
+					"raw": "{\r\n  \"name\": \"TestConfiguration1\",\r\n  \"callbackUrl\": \"https://5e192e274019c31972158fc43ce14781.m.pipedream.net\",\r\n  \"pdfEmailAddress\": \"monthio@monthio.com\",\r\n  \"shouldShowConsumerNote\": true,\r\n  \"budgetDefinitionId\": 1\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
