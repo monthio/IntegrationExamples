@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "f4fe2be1-7e4a-4570-8aa1-0afac5e0fc5a",
+		"_postman_id": "1b783227-df55-4b82-96c0-e321857c4680",
 		"name": "Monthio authentication",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -384,6 +384,96 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Get Eskat PDF",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{eskat_app_url}}/eskat-sessions/{{session_id}}/pdf",
+					"protocol": "https",
+					"host": [
+						"{{eskat_app_url}}"
+					],
+					"path": [
+						"eskat-sessions",
+						"{{session_id}}",
+						"pdf"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Eskat full data",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{eskat_app_url}}/eskat-sessions/{{session_id}}/full-data",
+					"protocol": "https",
+					"host": [
+						"{{eskat_app_url}}"
+					],
+					"path": [
+						"eskat-sessions",
+						"{{session_id}}",
+						"full-data"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Eskat selected-data",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{eskat_app_url}}/eskat-sessions/{{session_id}}/selected-data",
+					"protocol": "https",
+					"host": [
+						"{{eskat_app_url}}"
+					],
+					"path": [
+						"eskat-sessions",
+						"{{session_id}}",
+						"selected-data"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"event": [
@@ -418,6 +508,10 @@
 		{
 			"key": "budget_app_url",
 			"value": "test-budgets.monthio.com"
+		},
+		{
+			"key": "eskat_app_url",
+			"value": "test-eskat.monthio.com"
 		},
 		{
 			"key": "access_token",
