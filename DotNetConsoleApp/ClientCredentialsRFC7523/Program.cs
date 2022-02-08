@@ -1,21 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Security;
 using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
-using System.Text;
 using System.Threading.Tasks;
 using IdentityModel;
-using Newtonsoft.Json;
 using IdentityModel.Client;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Mbf.App
+namespace ClientCredentialsRFC7523
 {
     public class Program
     {
