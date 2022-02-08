@@ -56,7 +56,7 @@ namespace DotNetConsoleApp
                 new StringContent(JsonConvert.SerializeObject(new SmartCheckSessionRequestDto
                 {
                     ConsumerId = "consumer_id",
-                    ConsumerEmail = "oap@monthio.com",
+                    ConsumerEmail = "consumer@email.com",
                     SmartCheckConfigurationId = configuration.Id,
 
                 }), Encoding.UTF8, "application/json"));
