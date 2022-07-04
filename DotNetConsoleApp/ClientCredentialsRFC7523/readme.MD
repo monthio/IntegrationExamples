@@ -29,6 +29,8 @@ Example console app illustrates how to retrieve access token using signed JWT an
 ```
 
 2. Sign the JWT with your `private key`;
+   1. A private key can be generated with `openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -sha256 -days 365` use `-nodes` for passwordless file
+   1. _Optional_ `openssl pkcs12 -inkey key.pem -in cert.pem -export -out archive.pfx` can be used to change the pem key to pfx archive format. This is needed for this specific C# integration example
 3. Make request to the token endpoint;
 4. Retrieve `access token` from the response;
 
